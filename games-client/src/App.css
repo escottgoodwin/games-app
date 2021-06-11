@@ -68,6 +68,11 @@ input[type=text]:focus {
   color: #E74C3C;
 }
 
+.game-date {
+  font-size:medium;
+  color:#61dafb;
+}
+
 table {
   border-collapse: collapse;
 }

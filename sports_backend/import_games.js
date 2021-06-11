@@ -40,11 +40,13 @@ async function getTeams(){
 
 async function insertTeams(){
     const teams = await getTeams()
-    const insert_teams = 'INSERT INTO teams(team_id, team_name) VALUES($1, $2)'
+    const insert_teams = 'INSERT INTO teams(team_id, team_name, team_code) VALUES($1, $2, $3)'
     teams.forEach(async (t) => {
-      const values = [t.TeamID,t.Name]
+      const values = [t.TeamID,t.Name,t.Key]
       const inserts = await pgQuery(insert_teams,values)
     })
+    console.log('imported teams');
+    return 
 }
 
 async function insertGames(){
@@ -56,7 +58,9 @@ async function insertGames(){
         const values = [g.HomeTeam, g.AwayTeam, g.HomeTeamID, g.AwayTeamID, g.HomeTeamRuns, g.AwayTeamRuns, g.GameID, g.Day]
         const inserts = await pgQuery(insert_games,values)
     })
+    console.log('imported games');
+    return 
 }
 
 insertTeams()
-insertGames()
+// insertGames()

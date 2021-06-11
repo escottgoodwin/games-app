@@ -37,9 +37,9 @@ async function getRequest(url){
     return await result.json();
 }
 
-async function getGamesDB({team,number}){
+async function getGamesDB({team,gameNumber}){
     const query="SELECT games.game_id, games.home_team, games.home_score, games.away_team,games.away_score, games.game_date, teams.team_name FROM games INNER JOIN teams ON games.away_team_id = teams.team_id WHERE home_team = $1 GROUP BY games.game_id, games.home_team, games.home_score, games.away_team,games.away_score, games.game_date, teams.team_name  ORDER BY games.game_date DESC LIMIT $2"
-    return await pgQuery(query,[team,number])
+    return await pgQuery(query,[team,gameNumber])
 }
 
 async function getGames(team, gameNumber){
@@ -50,7 +50,13 @@ async function getGames(team, gameNumber){
         .filter(t => t.HomeTeam === team  && t.Status === "Final" || t.AwayTeam  === team && t.Status === "Final")
         .sort((a, b) => new Date(b.DateTime) - new Date(a.DateTime))
         .slice(0,gameNumber)
-        .map(g => ({home: g.HomeTeam, homeScore: g.HomeTeamRuns, away: g.AwayTeam,awayScore: g.AwayTeamRuns}))
+        .map(g => ({
+            home: g.HomeTeam, 
+            homeScore: g.HomeTeamRuns, 
+            away: g.AwayTeam,
+            awayScore: g.AwayTeamRuns, 
+            day: g.Day
+        }))
     } catch(e){
         return e
     }
@@ -60,6 +66,7 @@ async function getTeams(){
     const teamUrl = `https://fly.sportsdata.io/v3/mlb/scores/json/teams?key=${sportsKey}`
     try {
         const response = await getRequest(teamUrl)
+        console.log(response)
         return response.map(g => ({name: g.Name, code: g.Key}))
     } catch(e){
         return e
