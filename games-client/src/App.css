@@ -17,6 +17,16 @@
   color:#c8f7c5;
 }
 
+.link-style {
+  color:#736598;
+  text-decoration: none;
+}
+
+.link-style:hover {
+  text-decoration: underline;
+  color:#aea8d3 ;
+}
+
 .button {
   background-color: #61dafb;
   border: none;
@@ -28,6 +38,7 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
+  width:10em;
 }
 
 input[type=text], select {
@@ -87,6 +98,10 @@ td {
 
 td.search {
   padding: 0em 5px;
+}
+
+.team-logo {
+  height: 100px;
 }
 
 

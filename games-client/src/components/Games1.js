@@ -58,13 +58,15 @@ export default function Games(){
           handleSearch={handleSearch}
        />
        {error ?
-        <h4 className="loser">Error getting games</h4>
-        :
-        <GamesList 
-          teams={teams} 
-          games={games} 
-          teamName={teamName} 
-        />
+          <h4 className="loser">
+            Error getting games
+          </h4>
+          :
+          <GamesList 
+            teams={teams} 
+            games={games} 
+            teamName={teamName} 
+          />
        }
      </>
     )

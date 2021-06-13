@@ -51,20 +51,22 @@ export default function Games(){
     return(
       <>
        <TeamSearch
-            teams={teams} 
-            handleTeam={handleTeam} 
-            handleGameNumber={handleGameNumber} 
-            loading={loading} 
-            handleSearch={handleSearch}
+          teams={teams} 
+          handleTeam={handleTeam} 
+          handleGameNumber={handleGameNumber} 
+          loading={loading} 
+          handleSearch={handleSearch}
        />
        {error ?
-            <h4 className="loser">Error getting games</h4>
-            :
-            <GamesList 
-                teams={teams} 
-                games={games} 
-                teamName={teamName} 
-            />
+          <h4 className="loser">
+            Error getting games
+          </h4>
+          :
+          <GamesList 
+            teams={teams} 
+            games={games} 
+            teamName={teamName} 
+          />
         }
         </>
     )

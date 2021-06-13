@@ -1,7 +1,7 @@
 const { Client } = require("pg");
 const fetch = require('node-fetch')
 
-const sportsKey = 'e045499649254664873b0e6f3c6fed2d'
+const sportsKey = 'c1c7df6f2ded44e9bf64192d64dea0a9'
 
 const client = new Client({
     user: "docker",
@@ -14,8 +14,12 @@ const client = new Client({
 client.connect();
 
 async function getRequest(url){
-    const result = await fetch(url);
-    return await result.json();
+    try{
+        const result = await fetch(url);
+        return await result.json();
+    } catch(e){
+        console.log(e)
+    }
 }
 
 async function pgQuery(query,values){
@@ -36,6 +40,11 @@ async function getGames(){
 async function getTeams(){
     const teamUrl = `https://fly.sportsdata.io/v3/mlb/scores/json/teams?key=${sportsKey}`
     return await getRequest(teamUrl)
+}
+
+async function getGame(gameId){
+    const gameUrl = `https://fly.sportsdata.io/v3/mlb/stats/json/BoxScore/${gameId}?key=${sportsKey}`
+    return await getRequest(gameUrl)
 }
 
 async function insertTeams(){
@@ -62,5 +71,47 @@ async function insertGames(){
     return 
 }
 
-insertTeams()
+async function insertGames(){
+    const games = await getGames()
+    const insertGames = games.filter(g => g.Status==='Final')
+
+    const insert_games  = 'INSERT INTO games(home_team,away_team,home_team_id,away_team_id,home_score,away_score,game_id,game_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *'
+    insertGames.forEach(async (g) => {
+        const values = [g.HomeTeam, g.AwayTeam, g.HomeTeamID, g.AwayTeamID, g.HomeTeamRuns, g.AwayTeamRuns, g.GameID, g.Day]
+        const inserts = await pgQuery(insert_games,values)
+    })
+    console.log('imported games');
+    return 
+}
+
+async function insertInnings(){
+    try {
+    const games = await getGames()
+    const insertGames = games.filter(g => g.Status==='Final')
+
+    const insert_innings  = 'INSERT INTO innings(inning, away_score, home_score, home_team, away_team, home_team_id, away_team_id, game_id, game_date) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)'
+    insertGames.forEach(async (g) => {
+        const gameId = g.GameID
+        try {
+        const game = await getGame(gameId)
+        const innings = game.Innings
+
+        innings.forEach(async (inn) => {
+            const values = [inn.InningNumber, inn.AwayTeamRuns, inn.HomeTeamRuns, g.HomeTeam, g.AwayTeam, g.HomeTeamID, g.AwayTeamID, g.GameID, g.Day]
+            console.log(values)
+            const inserts = await pgQuery(insert_innings, values)
+        })
+        } catch(e){
+            console.log(e)
+        }
+    })
+    } catch(e){
+        console.log(e)
+    }
+    console.log('imported innings');
+    return 
+}
+
+// insertTeams()
 // insertGames()
+insertInnings()

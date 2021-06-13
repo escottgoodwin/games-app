@@ -4,7 +4,8 @@ import { postRequest, baseUrl } from '../util'
 
 export default function Weather(){
 
-    const [ weather, setWeather ] = useState('')
+    const [ celsius, setCelsius ] = useState('')
+    const [ farenheit, setFarenheit ] = useState('')
     const [ lat, setLat ] = useState(0)
     const [ lon, setLon ] = useState(0)
     const [ geo, setGeo ] = useState()
@@ -25,8 +26,9 @@ export default function Weather(){
           try {
             const data = {lat: geo.latitude,lon: geo.longitude}
             const response= await postRequest(url, data)
-            const { temp, name } = response
-            setWeather(temp)
+            const { celsius, farenheit, name }  = response
+            setCelsius(celsius)
+            setFarenheit(farenheit)
             setPlace(name)
   
           } catch(e){
@@ -40,24 +42,45 @@ export default function Weather(){
 
     return(
         <WeatherDisplay
-          weather={weather}
+          celsius={celsius}
+          farenheit={farenheit}
           place={place}
           error={error}
         />
     )
   }
 
-function WeatherDisplay({error,weather,place}){
+function WeatherDisplay({error,celsius, farenheit,place}){
     return(
         <>
         {error ?
-            <h4 className="loser">Error getting weather</h4>
-            :
-            <h4 className="weather">
-                Currently {weather}°F in {place} 
-            </h4>
+          <h4 className="loser">Error getting weather</h4>
+          :
+          <h4 className="weather">
+            Currently {farenheit}°F / {celsius}°C in {place} 
+          </h4>
         }
-        </>
-       
+        </> 
     )
 }
+
+// function WeatherDisplay1({error,celsius, farenheit,place}){
+//   return(
+//       <>
+//       {error ?
+//         <h4 className="loser">
+//           Error getting weather
+//         </h4>
+//         :
+//         <>
+//         <h4 className="weather">
+//           {place} Weather 
+//         </h4>
+//         <h4 className="weather">
+//           {farenheit}°F / {celsius}°C
+//       </h4>
+//       </>
+//       }
+//       </> 
+//   )
+// }

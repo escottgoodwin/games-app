@@ -1,6 +1,13 @@
 import './App.css';
-import Games from './components/Games1'
+import GamesPage from './pages/GamesPage'
+import GamePage from './pages/GamePage'
 import Weather from './components/Weather'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 export default function App() {
 
@@ -8,7 +15,16 @@ export default function App() {
     <div className="App">
       <header className="App-header">
         <Weather />
-        <Games />
+        <Router>
+          <Switch>
+              <Route path="/game/:gameId/">
+                <GamePage />
+              </Route>
+              <Route path="/">
+                <GamesPage  />
+              </Route>
+            </Switch>
+        </Router>
       </header>
     </div>
   );

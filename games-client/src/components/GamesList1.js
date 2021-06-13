@@ -1,36 +1,50 @@
+import { Link } from 'react-router-dom'
+
+export function scoreColors({away_score,home_score}){
+  const homeColor = parseInt(home_score) > parseInt(away_score) ? "winner" : "loser";
+  const awayColor = parseInt(home_score) < parseInt(away_score) ? "winner" : "loser";
+  return { homeColor, awayColor }
+}
+
 export default function GamesList({games,teams,teamName}){
+    const nameTeam = teamName ? teams[teamName].team_name : ''
     return(
       <>
       {games.length>0 &&
         <>
           <h2 className="App-link">
-            {teams[teamName].team_name}
+            {nameTeam}
           </h2>
           <table >
               <tbody>
                 {games.map((g,i) => 
                   <GameRow 
                     key={i} 
-                    home_name={teams[teamName].team_name} 
+                    home_name={nameTeam} 
                     {...g}
                   />
                 )}
               </tbody>
           </table>
+
         </>           
       }
     </>
     )
 }
 
-function GameRow({away_score,home_score, game_date, home_name, team_name}){
-    const homeColor = parseInt(home_score) > parseInt(away_score) ? "winner" : "loser";
-    const awayColor = parseInt(home_score) < parseInt(away_score) ? "winner" : "loser";
-    const gameDate = new Date(game_date).toDateString()
+export function GameRow({away_score, home_score, formattedDate, home_name, team_name, game_id}){
+    const { homeColor, awayColor } = scoreColors({away_score,home_score})
+    const link = `/game/${game_id}`
     return(
       <> 
         <tr>
-          <td align="center" colSpan="2" className="game-date">{gameDate}</td>
+          <td align="center" colSpan="2" className="game-date">
+            <Link className="link-style" to={link}>
+              {formattedDate}
+            </Link>
+            
+          </td>
         </tr>
         <ScoreRow 
           name={home_name}
@@ -49,7 +63,7 @@ function GameRow({away_score,home_score, game_date, home_name, team_name}){
     )
   }
 
-  function ScoreRow({name, score, color}){
+ export function ScoreRow({name, score, color}){
     return(
       <tr>
         <td className={color}>

@@ -24,3 +24,28 @@ CREATE TABLE IF NOT EXISTS teams (
   team_id VARCHAR,
   team_name VARCHAR
 );
+
+CREATE TABLE IF NOT EXISTS games (
+  id SERIAL PRIMARY KEY,
+  home_team VARCHAR,
+  away_team VARCHAR,
+  home_team_id VARCHAR,
+  away_team_id VARCHAR,
+  home_score VARCHAR,
+  away_score VARCHAR,
+  game_id VARCHAR,
+  game_date DATE
+);
+
+CREATE TABLE IF NOT EXISTS innings (
+  id SERIAL PRIMARY KEY,
+  inning VARCHAR,
+  home_team VARCHAR,
+  away_team VARCHAR,
+  home_team_id VARCHAR,
+  away_team_id VARCHAR,
+  home_score VARCHAR,
+  away_score VARCHAR,
+  game_id VARCHAR,
+  game_date DATE
+);
