@@ -41,6 +41,18 @@
   width:10em;
 }
 
+.button-submit {
+  background-color: #61dafb;
+}
+
+.button-error {
+  background-color: #E74C3C;
+}
+
+.button-success {
+  background-color: #2abb9b;
+}
+
 input[type=text], select {
   width: 100%;
   padding: 12px 20px;

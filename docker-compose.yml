@@ -17,7 +17,6 @@ services:
       PORT: 8000
       SPORTS_API_KEY: e045499649254664873b0e6f3c6fed2d
       WEATHER_API_KEY: e66516444f8fa668eb1b2bf3aa88675f
-      CHOKIDAR_USEPOLLING: "true"
 
   client_dev:
     build:

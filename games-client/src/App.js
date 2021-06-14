@@ -1,9 +1,9 @@
 import React from 'react'
 import './App.css';
 
-import GamesPage from './pages/GamesPage'
-import GamePage from './pages/GamePage'
-import Weather from './components/Weather'
+import GamesPage from './pages/GamesPage/GamesPage'
+import GamePage from './pages/GamePage/GamePage'
+import Weather from './components/Weather/Weather'
 
 import {
   BrowserRouter as Router,
