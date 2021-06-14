@@ -13,7 +13,13 @@ export default function GameInnings({innings}){
     )
 }
 
-function InningRow({inning, away_score, home_score, home_team, away_team}){
+function InningRow({
+  inning, 
+  away_score, 
+  home_score, 
+  home_team, 
+  away_team
+}){
     const { homeColor, awayColor } = scoreColors({away_score,home_score})
     return(
       <table >

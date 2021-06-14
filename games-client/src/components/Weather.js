@@ -43,19 +43,26 @@ export default function Weather(){
     },[lat,lon,geo])
 
     return(
+      <div>
+        <Error error={error} message='Error getting weather' />
         <WeatherDisplay
           celsius={celsius}
           farenheit={farenheit}
           place={place}
           error={error}
         />
+      </div>
     )
   }
 
-function WeatherDisplay({error,celsius, farenheit,place}){
+export function WeatherDisplay({
+  error,
+  celsius, 
+  farenheit,
+  place
+}){
     return(
         <div>
-        <Error error={error} message='Error getting weather' />
         {!error &&
           <h4 className="weather">
             Currently {farenheit}°F / {celsius}°C in {place} 

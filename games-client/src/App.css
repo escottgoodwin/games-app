@@ -67,6 +67,10 @@ input[type=text]:focus {
   color: white;
 }
 
+.background {
+  background-color: #282c34;
+}
+
 .App-link {
   color: #61dafb;
 }

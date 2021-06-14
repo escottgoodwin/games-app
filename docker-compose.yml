@@ -28,8 +28,22 @@ services:
       - /usr/app/node_modules
     depends_on:
       - api_dev
+    environment:
+      - SKIP_PREFLIGHT_CHECK=true
     ports:
       - "3000:3000"
+
+  client_storybook:
+    build:
+      context: ./games-client/
+    command: npm run storybook
+    volumes:
+      - ./games-client/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - client_dev
+    ports:
+      - "6006:6006"
 
   db:
     image: postgres

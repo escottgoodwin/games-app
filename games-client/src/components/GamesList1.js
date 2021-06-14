@@ -7,7 +7,11 @@ export function scoreColors({away_score,home_score}){
   return { homeColor, awayColor }
 }
 
-export default function GamesList({games,teams,teamName}){
+export default function GamesList({
+  games,
+  teams,
+  teamName
+}){
     const nameTeam = teamName ? teams[teamName].team_name : ''
     return(
       <div>
@@ -29,7 +33,14 @@ export default function GamesList({games,teams,teamName}){
   )
 }
 
-export function GameRow({away_score, home_score, formattedDate, home_name, team_name, game_id}){
+export function GameRow({
+  away_score, 
+  home_score, 
+  formattedDate, 
+  home_name, 
+  team_name, 
+  game_id
+}){
     const { homeColor, awayColor } = scoreColors({away_score,home_score})
     const link = `/game/${game_id}`
     return(
@@ -60,7 +71,11 @@ export function GameRow({away_score, home_score, formattedDate, home_name, team_
     )
   }
 
- export function ScoreRow({name, score, color}){
+ export function ScoreRow({
+   name, 
+   score, 
+   color
+  }){
     return(
       <tr>
         <td className={color}>

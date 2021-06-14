@@ -1,6 +1,5 @@
 import React from 'react'
 import './App.css';
-import { Link } from 'react-router-dom'
 
 import GamesPage from './pages/GamesPage'
 import GamePage from './pages/GamePage'
@@ -10,6 +9,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Link,
 } from "react-router-dom";
 
 export default function App() {
@@ -23,14 +23,13 @@ export default function App() {
             Home
           </Link>
           <Switch>
-              <Route path="/game/:gameId/">
-                <GamePage />
-              </Route>
-
-              <Route path="/">
-                <GamesPage  />
-              </Route>
-            </Switch>
+            <Route path="/game/:gameId/">
+              <GamePage />
+            </Route>
+            <Route path="/">
+              <GamesPage  />
+            </Route>
+          </Switch>
         </Router>
       </header>
     </div>
