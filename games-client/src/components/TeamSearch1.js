@@ -1,8 +1,16 @@
+import React from 'react'
+
 const numbers = [1,2,3,4,5,6,7,8,9,10]
 
-export default function TeamSearch({teams, handleTeam, handleGameNumber, loading, handleSearch}){
+export default function TeamSearch({
+    teams, 
+    handleTeam, 
+    handleGameNumber, 
+    loading, 
+    handleSearch,
+}){
     return(
-        <>
+        <div>
         {teams.length>0 &&
         <table>
             <tbody>
@@ -36,7 +44,7 @@ export default function TeamSearch({teams, handleTeam, handleGameNumber, loading
             </tbody>
         </table>
         }
-        </>
+        </div>
     )
 }
 

@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import { baseUrl, postRequest, getRequest } from '../util'
 
@@ -41,7 +41,7 @@ export default function Games(){
   
     useEffect(() => {
       async function getTeams(){
-        const url = baseUrl+'/teams'
+        const url = baseUrl+'/teamsdb'
         const teams = await getRequest(url)
         setTeams(teams)
       }
@@ -50,6 +50,7 @@ export default function Games(){
 
     return(
       <>
+      {teams.length>0 &&
        <TeamSearch
           teams={teams} 
           handleTeam={handleTeam} 
@@ -57,6 +58,7 @@ export default function Games(){
           loading={loading} 
           handleSearch={handleSearch}
        />
+      }
        {error ?
           <h4 className="loser">
             Error getting games

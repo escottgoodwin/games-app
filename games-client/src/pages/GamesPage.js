@@ -1,19 +1,71 @@
-import '../App.css';
-import Games from '../components/Games1'
-import { Link } from "react-router-dom";
+import React, {useState, useEffect} from 'react'
 
-export default function GamesPage() {
+import { baseUrl, postRequest, getRequest } from '../util'
 
-  const gameid = '8484'
-  const link = `/game/${gameid}`
-  return (
-    <div className="App">
-      <header className="App-header">
-        <Link className="link-style" to={link}>
-          Game Page
-        </Link>
-        <Games />
-      </header>
-    </div>
-  );
-}
+import TeamSearch from '../components/TeamSearch1'
+import GamesList from '../components/GamesList1'
+import Error from '../components/Error'
+
+export default function Games(){
+
+    const [ teams, setTeams ] = useState([])
+    const [ games, setGames ] = useState([])
+    const [ team, setTeam ] = useState('')
+    const [ teamName, setTeamName ] = useState('')
+    const [ gameNumber, setGameNumber ] = useState(0)
+    const [ loading, setLoading ] = useState(false)
+    const [ error, setError ] =useState(false)
+  
+    async function getGames(){
+      setLoading(true)
+      setError(false)
+      const sportsUrl = baseUrl + '/gamesdb'
+      try{
+        const games = await postRequest(sportsUrl,{team, gameNumber})
+        setLoading(false)
+        setGames(games)
+      } catch(e){
+        setError(true)
+        setLoading(false)
+      }
+    }
+  
+    const handleSearch = () => getGames()
+  
+    const handleTeam = (e) => {
+      setTeam(e.target.value)
+      setTeamName(e.nativeEvent.target.selectedIndex)
+      setGames([])
+    }
+  
+    const handleGameNumber = e => setGameNumber(e.target.value)
+  
+    useEffect(() => {
+      async function getTeams(){
+        const url = baseUrl+'/teamsdb'
+        const teams = await getRequest(url)
+        setTeams(teams)
+      }
+      getTeams()
+    },[])
+    return(
+      <div>
+       <TeamSearch
+          teams={teams} 
+          handleTeam={handleTeam} 
+          handleGameNumber={handleGameNumber} 
+          loading={loading} 
+          handleSearch={handleSearch}
+       />
+       
+       <Error error={error} message='Error getting games!' />
+        {!error &&
+          <GamesList 
+            teams={teams} 
+            games={games} 
+            teamName={teamName} 
+          />
+        }
+        </div>
+    )
+  }

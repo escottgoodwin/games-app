@@ -19,6 +19,18 @@ services:
       WEATHER_API_KEY: e66516444f8fa668eb1b2bf3aa88675f
       CHOKIDAR_USEPOLLING: "true"
 
+  client_dev:
+    build:
+      context: ./games-client/
+    command: npm start
+    volumes:
+      - ./games-client/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - api_dev
+    ports:
+      - "3000:3000"
+
   db:
     image: postgres
     container_name: pg-docker

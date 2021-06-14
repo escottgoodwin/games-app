@@ -24,7 +24,9 @@ function GameRow({home,homeScore,away,awayScore, day}){
     return(
       <> 
             <tr>
-                <td align="center" colSpan="2" className="game-date">{gameDate}</td>
+                <td align="center" colSpan="2" className="game-date">
+                  {gameDate}
+                </td>
             </tr>
             <ScoreRow 
             name={home}

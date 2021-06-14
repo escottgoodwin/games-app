@@ -1,6 +1,8 @@
-import {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react'
 
 import { postRequest, baseUrl } from '../util'
+
+import Error from '../components/Error'
 
 export default function Weather(){
 
@@ -52,15 +54,14 @@ export default function Weather(){
 
 function WeatherDisplay({error,celsius, farenheit,place}){
     return(
-        <>
-        {error ?
-          <h4 className="loser">Error getting weather</h4>
-          :
+        <div>
+        <Error error={error} message='Error getting weather' />
+        {!error &&
           <h4 className="weather">
             Currently {farenheit}°F / {celsius}°C in {place} 
           </h4>
         }
-        </> 
+        </div> 
     )
 }
 

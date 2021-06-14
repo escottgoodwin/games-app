@@ -1,4 +1,7 @@
+import React from 'react'
 import './App.css';
+import { Link } from 'react-router-dom'
+
 import GamesPage from './pages/GamesPage'
 import GamePage from './pages/GamePage'
 import Weather from './components/Weather'
@@ -16,10 +19,14 @@ export default function App() {
       <header className="App-header">
         <Weather />
         <Router>
+          <Link className="link-style" to="/">
+            Home
+          </Link>
           <Switch>
               <Route path="/game/:gameId/">
                 <GamePage />
               </Route>
+
               <Route path="/">
                 <GamesPage  />
               </Route>
