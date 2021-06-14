@@ -11,6 +11,10 @@ import GameRow from '../GameRow/GameRow'
 export default {
   title: 'GameRow',
   component: GameRow,
+  argTypes: {
+    formattedDate: { control: 'text' },
+  },
+  
 };
 
 const Template = (args) => <Router><GameRow {...args} /></Router>;
@@ -24,4 +28,17 @@ GameStory.args = {
   game_id: 84,
   away_score:4, 
   home_score:1, 
+  tableStyle:''
+};
+
+export const GameBorderStory = Template.bind({});
+
+GameBorderStory.args = {
+  formattedDate: 'June 10, 2021', 
+  home_name: 'Angeles', 
+  team_name: 'Dodgers', 
+  game_id: 84,
+  away_score:4, 
+  home_score:1, 
+  tableStyle:'game-score-border'
 };

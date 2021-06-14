@@ -64,6 +64,7 @@ export default function GamesPage(){
             teams={teams} 
             games={games} 
             teamName={teamName} 
+            border={true}
           />
         }
         </div>

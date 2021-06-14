@@ -11,9 +11,11 @@ export function scoreColors({away_score,home_score}){
 export default function GamesList({
   games,
   teams,
-  teamName
+  teamName,
+  border,
 }){
     const nameTeam = teamName ? teams[teamName].team_name : ''
+    const tableStyle = border ? 'game-score-border' : ''
     return(
       <div>
       {games.length>0 &&
@@ -23,6 +25,7 @@ export default function GamesList({
           </h2>
             {games.map((g,i) => 
               <GameRow 
+                tableStyle={tableStyle}
                 key={i} 
                 home_name={nameTeam} 
                 {...g}

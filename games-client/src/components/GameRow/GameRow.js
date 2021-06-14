@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
+import PropTypes from 'prop-types';
 
 import ScoreRow from '../ScoreRow/ScoreRow'
 
@@ -15,18 +16,19 @@ export default function GameRow({
     formattedDate, 
     home_name, 
     team_name, 
-    game_id
+    game_id,
+    tableStyle,
   }){
       const { homeColor, awayColor } = scoreColors({away_score,home_score})
       const link = `/game/${game_id}`
-      const gameDay = formattedDate;
       return(
-        <table >
+      <div className={tableStyle}>
+        <table className="game-table" >
           <tbody>
             <tr>
               <td align="center" colSpan="2" className="game-date">
                 <Link className="link-style" to={link}>
-                  {gameDay}
+                  {formattedDate}
                 </Link>
               </td>
             </tr>
@@ -45,5 +47,16 @@ export default function GameRow({
             </tr>
           </tbody>
         </table>
+      </div>
       )
     }
+
+GameRow.propTypes = {
+  name: PropTypes.string,
+  away_score: PropTypes.string,
+  home_score: PropTypes.string, 
+  formattedDate: PropTypes.string, 
+  home_name: PropTypes.string,
+  team_name: PropTypes.string, 
+  game_id: PropTypes.string,
+};

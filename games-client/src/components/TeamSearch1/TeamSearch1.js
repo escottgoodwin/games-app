@@ -40,8 +40,8 @@ export default function TeamSearch({
                     <td>
                         <SearchButton 
                             handleSearch={handleSearch} 
-                            loading={loading}
-                            styleClass="button button-submit"
+                            text='Submit'
+                            styleClass={loading ? "button button-loading" : "button button-submit"}
                         />
                     </td>
                 </tr>

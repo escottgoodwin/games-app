@@ -53,6 +53,29 @@
   background-color: #2abb9b;
 }
 
+.button-loading {
+  background-color: #a4a4a4;
+}
+
+.game-score-border {
+  border: 1px solid #61dafb;
+  border-radius: 10px;
+  margin:20px;
+}
+
+.game-score-border-winner {
+  border: 1px solid #2abb9b;
+}
+
+.game-score-border-loser {
+  border: 1px solid #E74C3C;
+}
+
+.game-table {
+  padding:20px;
+  margin:20px;
+}
+
 input[type=text], select {
   width: 100%;
   padding: 12px 20px;

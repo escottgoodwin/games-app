@@ -17,7 +17,31 @@ const Template = (args) => <SearchButton {...args} />;
 export const SearchButtonStory = Template.bind({});
 
 SearchButtonStory.args = {
+    text:'Submit',
     handleSearch: action('handleSearch'),
-    loading: false,
     styleClass:"button button-submit"
+};
+
+export const SuccessButtonStory = Template.bind({});
+
+SuccessButtonStory.args = {
+    handleSearch: action('handleSearch'),
+    text:'Success',
+    styleClass:"button button-success"
+};
+
+export const ErrorButtonStory = Template.bind({});
+
+ErrorButtonStory.args = {
+    handleSearch: action('handleSearch'),
+    text:'Error',
+    styleClass:"button button-error"
+};
+
+export const LoadingButtonStory = Template.bind({});
+
+LoadingButtonStory.args = {
+    handleSearch: action('handleSearch'),
+    text:'Loading',
+    styleClass:"button button-loading"
 };

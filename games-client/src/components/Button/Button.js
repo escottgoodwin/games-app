@@ -1,13 +1,13 @@
 import React from 'react'
 
 export default function SearchButton({
+    text,
     handleSearch,
-    loading,
-    styleClass
+    styleClass,
 }){
     return(
         <button onClick={handleSearch} className={styleClass}>
-            {loading ? 'Searching' : 'Submit'}
+            {text}
         </button>
     )
 }
