@@ -43,43 +43,17 @@ function initApp() {
       document.getElementById('user-email').textContent = `${user.email}`;
       document.getElementById('translate-btn').style.display = ""
       document.getElementById('translation-container').style.display = ""
-
-      const url = 'https://us-central1-langolearn.cloudfunctions.net/getUser';
-      const data = {uid: user.uid};
-
-      fetch(url, {
-        method: "post",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify(data),
-      })
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        // const langs = data.langs;
-        console.log(data);
-        // document.getElementById('orig_lang').textContent = langs[0];
-        // const selects = langs.map(l => langSelects(l));
-        // const langhtml = selects.join('');
-        // document.getElementById('choose-lang').innerHTML = langhtml;
-      })
-      .catch(function(error) {
-        // if some error happened
-        console.log(error);
-      });
   } else {
       // Let's try to get a Google auth token programmatically.
       document.getElementById('quickstart-button').textContent = 'Sign-in with Google';
       document.getElementById('user-email').textContent = '';
       document.getElementById('translate-btn').style.display = "none"
       document.getElementById('translation-container').style.display = "none"
-
     }
     document.getElementById('quickstart-button').disabled = false;
 
   });
 
-  
     document.getElementById('quickstart-button').addEventListener('click', startSignIn, false);
 
     document.getElementById('translate-btn').addEventListener('click', function() {
@@ -87,22 +61,6 @@ function initApp() {
         sendTranslation(uid);
         return;
       });
-
-    // document.getElementById('choose-lang').addEventListener('change', (event) => {
-    //     document.getElementById("orig_lang").textContent = event.target.value;
-    // });
-
-    // document.getElementById('change-lang').addEventListener('click', (event) => {
-    //     const dropdownDisplay = document.getElementById('lang-choose-container').style.display
-    //     if(dropdownDisplay==="none"){
-    //         document.getElementById('lang-choose-container').style.display = "";
-    //         document.getElementById('change-lang').textContent = 'Close';
-    //     } else {
-    //         document.getElementById('lang-choose-container').style.display = "none";
-    //         document.getElementById('change-lang').textContent = 'Change';
-
-    //     }
-    // });
   
   }
 
