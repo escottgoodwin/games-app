@@ -19,56 +19,77 @@ function getLanguage(lang){
             return 'German';
     }
 }
-
-function detectLanguage(inputText) {
-  chrome.i18n.detectLanguage(inputText, function(result) {
-    var outputLang = "";
-    var outputPercent = "";
-    for(i = 0; i < result.languages.length; i++) {
-      outputLang += result.languages[i].language + " ";
-      outputPercent +=result.languages[i].percentage + " ";
-    }
-    document.getElementById("orig_lang").innerHTML = outputLang;
-  });
-}
-
   
 function initApp() {
-  // Listen for auth state changes.
-
+  const qsBtn = document.getElementById('quickstart-button');
+  const userEmail =  document.getElementById('user-email');
+  const transBtn = document.getElementById('translate-btn');
+  const transContainer = document.getElementById('translation-container')
+  const clusterContainer = document.getElementById('cluster-container');
+  
   firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
-      // User is signed in.
-      document.getElementById('quickstart-button').textContent = 'Sign out';
-      document.getElementById('user-email').textContent = `${user.email}`;
-      document.getElementById('translate-btn').style.display = ""
-      document.getElementById('translation-container').style.display = ""
+      qsBtn.textContent = 'Sign out';
+      userEmail.textContent = `${user.email}`;
+      transBtn.style.display = "";
+      transContainer.style.display = "";
   } else {
-      // Let's try to get a Google auth token programmatically.
-      document.getElementById('quickstart-button').textContent = 'Sign-in with Google';
-      document.getElementById('user-email').textContent = '';
-      document.getElementById('translate-btn').style.display = "none"
-      document.getElementById('translation-container').style.display = "none"
+      qsBtn.textContent = 'Sign-in with Google';
+      userEmail.textContent = '';
+      transBtn.style.display = "none";
+      transContainer.style.display = "none";
     }
-    document.getElementById('quickstart-button').disabled = false;
-
+    clusterContainer.style.display = "none"
+    qsBtn.disabled = false;
   });
 
     document.getElementById('quickstart-button').addEventListener('click', startSignIn, false);
 
-    document.getElementById('translate-btn').addEventListener('click', function() {
-        const uid = firebase.auth().currentUser.uid;
-        sendTranslation(uid);
-        return;
-      });
-  
+    document.getElementById('translate-btn').addEventListener('click', sendTranslation);
+
+    document.getElementById('cluster-btn').addEventListener('click', openClusters);
+
+    document.getElementById('cluster-close').addEventListener('click', closeClusters);
+
+    document.getElementById('add-cluster-btn').addEventListener('click', addClusterLink);
+
   }
 
-function langSelects(lang){
-  return `<option value="${lang}">${lang}</option>`
+function openClusters(){
+  // const uid = firebase.auth().currentUser.uid;
+  const uid = "3736ENQJEUavLjKX8ufPf5zfKl62";
+  chrome.runtime.sendMessage({"message": "cluster", "uid": uid}, async function (response) {
+    document.getElementById('choose-cluster').innerHTML = response;
+    document.getElementById('cluster-container').style.display = "";
+  });
+}
+function addClusterLink(){
+  // const uid = firebase.auth().currentUser.uid;
+  const choice = document.getElementById("choose-cluster").value;
+  const choices = choice.split('-');
+  const uid = "3736ENQJEUavLjKX8ufPf5zfKl62";
+
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    const linkData = {
+      "message": "add_cluster_link", 
+      "uid": uid, 
+      "tab": tabs[0], 
+      "cluster_id": choices[0], 
+      "lang": choices[1]
+    };
+    chrome.runtime.sendMessage(linkData, async function (response) {
+      console.log(response);
+    });  
+  });
 }
 
-function sendTranslation(uid){
+function closeClusters(){
+  document.getElementById('cluster-container').style.display = "none";
+  return;
+}
+
+function sendTranslation(){
+  const uid = firebase.auth().currentUser.uid;
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {"message": "translate", "uid": uid});
   });
@@ -86,10 +107,8 @@ function startAuth(interactive) {
     } else if(chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError);
     } else if (token) {
-      // Authorize Firebase with the OAuth Access Token.
       var credential = firebase.auth.GoogleAuthProvider.credential(null, token);
       firebase.auth().signInWithCredential(credential).catch(function(error) {
-        // The OAuth token might have been invalidated. Lets' remove it from cache.
         if (error.code === 'auth/invalid-credential') {
           chrome.identity.removeCachedAuthToken({token: token}, function() {
             startAuth(interactive);
@@ -102,20 +121,18 @@ function startAuth(interactive) {
   });
 }
 
-  
-  
-  /**
-   * Starts the sign-in process.
-   */
-  function startSignIn() {
-    document.getElementById('quickstart-button').disabled = true;
-    if (firebase.auth().currentUser) {
-      firebase.auth().signOut();
-    } else {
-      startAuth(true);
-    }
+/**
+ * Starts the sign-in process.
+ */
+function startSignIn() {
+  document.getElementById('quickstart-button').disabled = true;
+  if (firebase.auth().currentUser) {
+    firebase.auth().signOut();
+  } else {
+    startAuth(true);
   }
+}
   
-  window.onload = function() {
-    initApp();
-  };
+window.onload = function() {
+  initApp();
+};

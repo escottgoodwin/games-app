@@ -2,24 +2,10 @@
 let find = "";
 let replace = "";
 
-function detectLanguage() {
-  const docText = document.body.innerText;
-  chrome.i18n.detectLanguage(docText.slice(0,500), function(result) {
-    var outputLang = "";
-    var outputPercent = "";
-    for(i = 0; i < result.languages.length; i++) {
-      outputLang += result.languages[i].language + " ";
-      outputPercent +=result.languages[i].percentage + " ";
-    }
-    return outputLang;
-  });
-}
-
 // listen for any "messages"
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   if (request.message === "translate") {
-      // get the highlighted text on the web page (content)
       const word = window.getSelection().toString();
       if (word.length > 0) {
         const docText = document.body.innerText.slice(0,500);
@@ -28,7 +14,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           for(i = 0; i < result.languages.length; i++) {
             outputLang += result.languages[i].language;
           }
-          chrome.runtime.sendMessage({"word": word, "uid": request.uid, "orig_lang": outputLang});
+          chrome.runtime.sendMessage({"type": "translate", "word": word, "uid": request.uid, "orig_lang": outputLang});
         });
       } else {
           alert('Please select some text to translate.')
@@ -38,16 +24,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       // get the "find" (actual word) and "replace" (translatedText)
       find = request.find;
       replace = request.replace;
-      console.log(replace);
       // replaceText function to replace all instances of "find" word with the "replace" word
       replaceText(document.body);
-      
-    } else if (request.message === "error") {å
-      // just console log it
+    } else if (request.message === "error") {
       console.log(request.error);
       console.log("Sorry some error happened :(");
-    }
-    
+    } 
   });
   
   // replaceText function definition
