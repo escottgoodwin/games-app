@@ -21,30 +21,31 @@ function getLanguage(lang){
 let uid;
 
 function initApp() {
-  const qsBtn = document.getElementById('quickstart-button');
   const userEmail =  document.getElementById('user-email');
   const transBtn = document.getElementById('translate-btn');
+  const clusterBtn = document.getElementById('cluster-btn');
   const transContainer = document.getElementById('translation-container')
   const clusterContainer = document.getElementById('cluster-container');
-  
+  const signInMsg = document.getElementById('sign-in-msg');
+
   firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
-      qsBtn.textContent = 'Sign out';
       userEmail.textContent = `${user.email}`;
       transBtn.style.display = "";
       transContainer.style.display = "";
+      clusterBtn.style.display = "";
+      signInMsg.textContent = 'Logout'
       uid = firebase.auth().currentUser.uid;
   } else {
-      qsBtn.textContent = 'Sign-in with Google';
       userEmail.textContent = '';
       transBtn.style.display = "none";
       transContainer.style.display = "none";
+      clusterBtn.style.display = "none";
+      signInMsg.textContent = 'Login'
+      uid = null;
     }
     clusterContainer.style.display = "none"
-    qsBtn.disabled = false;
   });
-
-    qsBtn.addEventListener('click', startSignIn, false);
 
     transBtn.addEventListener('click', sendTranslation);
 
@@ -54,7 +55,7 @@ function initApp() {
 
     document.getElementById('add-cluster-btn').addEventListener('click', sendNewLink);
 
-  }
+}
 
 function openClusters(){
   chrome.runtime.sendMessage({"message": "cluster", "uid": uid}, async function (response) {

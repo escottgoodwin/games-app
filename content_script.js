@@ -16,7 +16,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           for(i = 0; i < result.languages.length; i++) {
             outputLang += result.languages[i].language;
           }
-          chrome.runtime.sendMessage({"type": "translate", "word": word, "uid": request.uid, "orig_lang": outputLang});
+          chrome.runtime.sendMessage({
+            "type": "translate", 
+            "word": word, 
+            "uid": request.uid, 
+            "orig_lang": outputLang,
+          });
         });
       } else {
           alert('Please select some text to translate.')
@@ -54,17 +59,42 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           "cluster_id": cluster_id,
           "cluster_lang": cluster_lang,
         };
-        console.log(sendData);
 
         if(outputLang.length>0){
           chrome.runtime.sendMessage(sendData);
         }
       });
     } else if (request.message === "link_added") {
-      console.log(request.success_msg);
       alert(request.success_msg);
+    } else if (request.message === "auth-token") {
+      chrome.runtime.sendMessage({
+        "type": "auth-token", 
+        "token": request.token,
+      });
     } else {
       console.log('no route');
+    }
+  });
+
+  window.addEventListener("message", function(event) {
+    // We only accept messages from ourselves
+
+    if (event.source != window)
+        return;
+
+    if (event.data.type && (event.data.type == "auth-token")) {
+        chrome.runtime.sendMessage({
+          "type": "auth-token", 
+          "token": event.data.token,
+        });
+      }
+    
+    if (event.data.type && (event.data.type == "sign-out")) {
+      const uid = event.data.uid;
+      chrome.runtime.sendMessage({
+        "type": "sign-out", 
+        "uid": uid,
+      });
     }
   });
   

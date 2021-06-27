@@ -1,10 +1,10 @@
-// const config = {
-//     apiKey: "AIzaSyDgi2AES0HjCr2Yp6QUQJzMRWHJJi1G3m8",
-//     databaseURL: "https://langolearn.firebaseio.com",
-//     storageBucket: "langolearn.appspot.com",
-//   };
-//  firebase.initializeApp(config);
-//  var functions = firebase.functions();
+const config = {
+    apiKey: "AIzaSyDgi2AES0HjCr2Yp6QUQJzMRWHJJi1G3m8",
+    databaseURL: "https://langolearn.firebaseio.com",
+    storageBucket: "langolearn.appspot.com",
+  };
+firebase.initializeApp(config);
+var functions = firebase.functions();
 
 function clusterSelects({cluster_id, clusterName, lang}){
   return `<option value="${cluster_id}-${lang}">${clusterName} - ${lang}</option>`
@@ -21,8 +21,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       cluster_id: request.cluster_id,
       url: request.url,
     }
-
-    console.log(linkData);
 
     // const addLinkurl = `https://878adb7ff6c9.ngrok.io/langolearn/us-central1/newUserLink2`;
     const addLinkurl = 'https://us-central1-langolearn.cloudfunctions.net/newUserLink2';
@@ -169,5 +167,30 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     return true;
   }
+
+  if (request.type === 'auth-token'){
+    backgroundFBAuth(request.token);
+  }
+
+  if (request.type === 'sign-out'){
+    console.log(request.uid)
+    logoutFBAuth(request.uid)
+  }
+
 });
   
+function backgroundFBAuth(token){
+  firebase
+  .auth()
+  .signInWithCustomToken(token)
+  .catch((error) => {
+    console.log('error', error)
+  })
+}
+
+function logoutFBAuth(uid){
+  const user = firebase.auth().currentUser;
+  if (user.uid === uid){
+    firebase.auth().signOut();
+  }
+}
