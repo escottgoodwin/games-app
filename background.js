@@ -3,8 +3,8 @@ const config = {
     databaseURL: "https://langolearn.firebaseio.com",
     storageBucket: "langolearn.appspot.com",
   };
- firebase.initializeApp(config);
- var functions = firebase.functions();
+firebase.initializeApp(config);
+var functions = firebase.functions();
 
 function clusterSelects({cluster_id, clusterName, lang}){
   return `<option value="${cluster_id}-${lang}">${clusterName} - ${lang}</option>`
