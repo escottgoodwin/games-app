@@ -19,7 +19,9 @@ function getLanguage(lang){
             return 'German';
     }
 }
-  
+
+let uid;
+
 function initApp() {
   const qsBtn = document.getElementById('quickstart-button');
   const userEmail =  document.getElementById('user-email');
@@ -33,6 +35,7 @@ function initApp() {
       userEmail.textContent = `${user.email}`;
       transBtn.style.display = "";
       transContainer.style.display = "";
+      uid = firebase.auth().currentUser.uid;
   } else {
       qsBtn.textContent = 'Sign-in with Google';
       userEmail.textContent = '';
@@ -43,43 +46,22 @@ function initApp() {
     qsBtn.disabled = false;
   });
 
-    document.getElementById('quickstart-button').addEventListener('click', startSignIn, false);
+    qsBtn.addEventListener('click', startSignIn, false);
 
-    document.getElementById('translate-btn').addEventListener('click', sendTranslation);
+    transBtn.addEventListener('click', sendTranslation);
 
     document.getElementById('cluster-btn').addEventListener('click', openClusters);
 
     document.getElementById('cluster-close').addEventListener('click', closeClusters);
 
-    document.getElementById('add-cluster-btn').addEventListener('click', addClusterLink);
+    document.getElementById('add-cluster-btn').addEventListener('click', sendNewLink);
 
   }
 
 function openClusters(){
-  // const uid = firebase.auth().currentUser.uid;
-  const uid = "3736ENQJEUavLjKX8ufPf5zfKl62";
   chrome.runtime.sendMessage({"message": "cluster", "uid": uid}, async function (response) {
     document.getElementById('choose-cluster').innerHTML = response;
     document.getElementById('cluster-container').style.display = "";
-  });
-}
-function addClusterLink(){
-  // const uid = firebase.auth().currentUser.uid;
-  const choice = document.getElementById("choose-cluster").value;
-  const choices = choice.split('-');
-  const uid = "3736ENQJEUavLjKX8ufPf5zfKl62";
-
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    const linkData = {
-      "message": "add_cluster_link", 
-      "uid": uid, 
-      "tab": tabs[0], 
-      "cluster_id": choices[0], 
-      "lang": choices[1]
-    };
-    chrome.runtime.sendMessage(linkData, async function (response) {
-      console.log(response);
-    });  
   });
 }
 
@@ -89,16 +71,31 @@ function closeClusters(){
 }
 
 function sendTranslation(){
-  const uid = firebase.auth().currentUser.uid;
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {"message": "translate", "uid": uid});
   });
 }
+
+function sendNewLink(){
+  const choice = document.getElementById("choose-cluster").value;
+  const choices = choice.split('-');
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    const sendData = {
+      "message": "new-link", 
+      "uid": uid,
+      "tab": tabs[0], 
+      "cluster_id": choices[0],
+      "cluster_lang": choices[1],
+    };
+
+    chrome.tabs.sendMessage(tabs[0].id, sendData);
+  });
+}
   
-  /**
-   * Start the auth flow and authorizes to Firebase.
-   * @param{boolean} interactive True if the OAuth flow should request with an interactive mode.
-   */
+/**
+ * Start the auth flow and authorizes to Firebase.
+ * @param{boolean} interactive True if the OAuth flow should request with an interactive mode.
+ */
 function startAuth(interactive) {
     // Request an OAuth token from the Chrome Identity API.
   chrome.identity.getAuthToken({interactive: !!interactive}, function(token) {
