@@ -1,10 +1,10 @@
-// const config = {
-//     apiKey: "AIzaSyDgi2AES0HjCr2Yp6QUQJzMRWHJJi1G3m8",
-//     databaseURL: "https://langolearn.firebaseio.com",
-//     storageBucket: "langolearn.appspot.com",
-//   };
-//  firebase.initializeApp(config);
-//  var functions = firebase.functions();
+const config = {
+    apiKey: "AIzaSyDgi2AES0HjCr2Yp6QUQJzMRWHJJi1G3m8",
+    databaseURL: "https://langolearn.firebaseio.com",
+    storageBucket: "langolearn.appspot.com",
+  };
+ firebase.initializeApp(config);
+ var functions = firebase.functions();
 
 function clusterSelects({cluster_id, clusterName, lang}){
   return `<option value="${cluster_id}-${lang}">${clusterName} - ${lang}</option>`
