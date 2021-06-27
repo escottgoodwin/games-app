@@ -24,6 +24,7 @@ function initApp() {
   const qsBtn = document.getElementById('quickstart-button');
   const userEmail =  document.getElementById('user-email');
   const transBtn = document.getElementById('translate-btn');
+  const clusterBtn = document.getElementById('cluster-btn');
   const transContainer = document.getElementById('translation-container')
   const clusterContainer = document.getElementById('cluster-container');
   
@@ -33,12 +34,15 @@ function initApp() {
       userEmail.textContent = `${user.email}`;
       transBtn.style.display = "";
       transContainer.style.display = "";
+      clusterBtn.style.display = "";
       uid = firebase.auth().currentUser.uid;
   } else {
       qsBtn.textContent = 'Sign-in with Google';
       userEmail.textContent = '';
       transBtn.style.display = "none";
       transContainer.style.display = "none";
+      clusterBtn.style.display = "none";
+      uid = null;
     }
     clusterContainer.style.display = "none"
     qsBtn.disabled = false;

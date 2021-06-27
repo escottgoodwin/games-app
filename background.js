@@ -169,5 +169,31 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
     return true;
   }
+
+  if (request.type === 'auth-token'){
+    backgroundFBAuth(request.token);
+  }
+
+  if (request.type === 'sign-out'){
+    console.log(request.uid)
+    logoutFBAuth(request.uid)
+  }
+
 });
   
+function backgroundFBAuth(token){
+  firebase
+  .auth()
+  .signInWithCustomToken(token)
+  .catch((error) => {
+    console.log('error', error)
+  })
+}
+
+function logoutFBAuth(uid){
+  const user = firebase.auth().currentUser;
+  if (user.uid === uid){
+    console.log('signing out...')
+    firebase.auth().signOut();
+  }
+}

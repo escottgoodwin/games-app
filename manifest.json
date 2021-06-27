@@ -19,6 +19,9 @@
     "background": {
       "page": "background.html"
     },
+    "externally_connectable": {
+      "matches": ["*://*.langalearn.com/*","http://localhost:3000/"]
+    },
     "permissions": [
       "identity",
       "tabs"
