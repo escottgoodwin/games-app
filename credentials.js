@@ -1,11 +1,9 @@
-// TODO(DEVELOPER): Change the values below using values from the initialization snippet: Firebase Console > Overview > Add Firebase to your web app.
-// Initialize Firebase
 const config = {
-    apiKey: "AIzaSyDgi2AES0HjCr2Yp6QUQJzMRWHJJi1G3m8",
-    databaseURL: "https://langolearn.firebaseio.com",
-    storageBucket: "langolearn.appspot.com",
-  };
-  firebase.initializeApp(config);
+  apiKey: "AIzaSyDgi2AES0HjCr2Yp6QUQJzMRWHJJi1G3m8",
+  databaseURL: "https://langolearn.firebaseio.com",
+  storageBucket: "langolearn.appspot.com",
+};
+firebase.initializeApp(config);
 
 function getLanguage(lang){
     switch(lang){
@@ -87,7 +85,6 @@ function sendNewLink(){
       "cluster_id": choices[0],
       "cluster_lang": choices[1],
     };
-
     chrome.tabs.sendMessage(tabs[0].id, sendData);
   });
 }
@@ -97,7 +94,6 @@ function sendNewLink(){
  * @param{boolean} interactive True if the OAuth flow should request with an interactive mode.
  */
 function startAuth(interactive) {
-    // Request an OAuth token from the Chrome Identity API.
   chrome.identity.getAuthToken({interactive: !!interactive}, function(token) {
     if (chrome.runtime.lastError && !interactive) {
       console.log('It was not possible to get a token programmatically.');

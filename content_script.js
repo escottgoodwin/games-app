@@ -4,7 +4,6 @@ let replace = "";
 
 // listen for any "messages"
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-
   if (request.message === "translate") {
       const word = window.getSelection().toString();
       
@@ -40,13 +39,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       let cluster_lang = request.cluster_lang;
 
       const docText = document.body.innerText.slice(0,500);
-      
+
       chrome.i18n.detectLanguage(docText, function(result) {
         var outputLang = "";
         for(i = 0; i < result.languages.length; i++) {
           outputLang += result.languages[i].language;
         }
-        console.log(outputLang);
 
         const sendData = {
           "type": "add-link", 
@@ -69,7 +67,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       console.log('no route');
     }
   });
-  
   
   // replaceText function definition
   function replaceText(element) {
