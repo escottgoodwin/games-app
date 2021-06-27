@@ -22,8 +22,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       url: request.url,
     }
 
-    console.log(linkData);
-
     // const addLinkurl = `https://878adb7ff6c9.ngrok.io/langolearn/us-central1/newUserLink2`;
     const addLinkurl = 'https://us-central1-langolearn.cloudfunctions.net/newUserLink2';
 
@@ -193,7 +191,6 @@ function backgroundFBAuth(token){
 function logoutFBAuth(uid){
   const user = firebase.auth().currentUser;
   if (user.uid === uid){
-    console.log('signing out...')
     firebase.auth().signOut();
   }
 }

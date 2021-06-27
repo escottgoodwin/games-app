@@ -59,7 +59,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
           "cluster_id": cluster_id,
           "cluster_lang": cluster_lang,
         };
-        console.log(sendData);
 
         if(outputLang.length>0){
           chrome.runtime.sendMessage(sendData);
@@ -68,8 +67,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     } else if (request.message === "link_added") {
       alert(request.success_msg);
     } else if (request.message === "auth-token") {
-      console.log('auth');
-      console.log(request);
       chrome.runtime.sendMessage({
         "type": "auth-token", 
         "token": request.token,
@@ -94,7 +91,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     
     if (event.data.type && (event.data.type == "sign-out")) {
       const uid = event.data.uid;
-      console.log(uid);
       chrome.runtime.sendMessage({
         "type": "sign-out", 
         "uid": uid,
