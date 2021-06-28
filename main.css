@@ -2,16 +2,32 @@
     font-family: 'Roboto', 'Helvetica', sans-serif;
   }
   body {
-    width: 300px;
+    width: 375px;
     margin: 0;
     padding: 5px;
+    background-color: honeydew;
   }
   a {
     text-decoration: none;
+    color:#6415ff;
   }
   li a {
     text-decoration: underline;
     color: #0288d1;
+  }
+  button {
+    display:inline-block;
+    padding:0.3em;
+    margin:0 0.3em 0.3em 0;
+    border-radius: 0.3em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:300;
+    color:#FFFFFF;
+    background-color:#6415ff;
+    text-align:center;
+    transition: all 0.2s;
   }
   .mdl-grid {
     max-width: 1024px;
@@ -40,17 +56,11 @@
     background-size: 20px;
     padding-left: 30px;
     line-height: 24px;
-  }
-  .change-lang{
-    color:darkgreen;
-  }
-  .langs{
-    font-weight: bold;
-    color:darkgreen;
+    color: #6415ff;
   }
   .sign-in-container{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-    }
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
