@@ -23,50 +23,43 @@ let uid;
 function initApp() {
   const userEmail =  document.getElementById('user-email');
   const transBtn = document.getElementById('translate-btn');
-  const clusterBtn = document.getElementById('cluster-btn');
   const transContainer = document.getElementById('translation-container')
-  const clusterContainer = document.getElementById('cluster-container');
   const signInMsg = document.getElementById('sign-in-msg');
+  const clusterContainer = document.getElementById('cluster-container');
+  const clusterBtn = document.getElementById('cluster-btn'); 
 
   firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
       userEmail.textContent = `${user.email}`;
       transBtn.style.display = "";
       transContainer.style.display = "";
-      clusterBtn.style.display = "";
       signInMsg.textContent = 'Logout'
       uid = firebase.auth().currentUser.uid;
+      clusterContainer.style.display = "";
+      openClusters();
   } else {
       userEmail.textContent = '';
       transBtn.style.display = "none";
       transContainer.style.display = "none";
-      clusterBtn.style.display = "none";
+      clusterContainer.style.display = "none";
       signInMsg.textContent = 'Login'
       uid = null;
     }
-    clusterContainer.style.display = "none"
   });
 
-    transBtn.addEventListener('click', sendTranslation);
-
-    document.getElementById('cluster-btn').addEventListener('click', openClusters);
-
-    document.getElementById('cluster-close').addEventListener('click', closeClusters);
-
-    document.getElementById('add-cluster-btn').addEventListener('click', sendNewLink);
-
+  transBtn.addEventListener('click', sendTranslation);
+  document.getElementById('add-cluster-btn').addEventListener('click', sendNewLink);
 }
 
 function openClusters(){
-  chrome.runtime.sendMessage({"message": "cluster", "uid": uid}, async function (response) {
-    document.getElementById('choose-cluster').innerHTML = response;
-    document.getElementById('cluster-container').style.display = "";
+  chrome.storage.sync.get(["clusterchoices"], function(result) {
+    if (chrome.runtime.error) {
+      document.getElementById('choose-cluster').outerHTML = '<div style="color: red;">Error getting clusters</div>'
+      return
+    }
+    document.getElementById('choose-cluster').innerHTML = result.clusterchoices;
   });
-}
-
-function closeClusters(){
-  document.getElementById('cluster-container').style.display = "none";
-  return;
+  return
 }
 
 function sendTranslation(){
@@ -92,7 +85,7 @@ function sendNewLink(){
   
 /**
  * Start the auth flow and authorizes to Firebase.
- * @param{boolean} interactive True if the OAuth flow should request with an interactive mode.
+ * @param {boolean} interactive True if the OAuth flow should request with an interactive mode.
  */
 function startAuth(interactive) {
   chrome.identity.getAuthToken({interactive: !!interactive}, function(token) {

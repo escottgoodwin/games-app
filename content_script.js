@@ -77,7 +77,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   });
 
   window.addEventListener("message", function(event) {
-    // We only accept messages from ourselves
 
     if (event.source != window)
         return;
@@ -94,6 +93,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       chrome.runtime.sendMessage({
         "type": "sign-out", 
         "uid": uid,
+      });
+    }
+
+    if (event.data.type && (event.data.type == "cluster-choice")) {
+      const clusterchoices = event.data.clusterchoices;
+      chrome.storage.sync.set({ "clusterchoices" : clusterchoices }, function() {
+        if (chrome.runtime.error) {
+          console.log("Runtime error.");
+        }
       });
     }
   });
