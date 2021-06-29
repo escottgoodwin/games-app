@@ -5,19 +5,6 @@ const config = {
 };
 firebase.initializeApp(config);
 
-function getLanguage(lang){
-    switch(lang){
-        case 'en':
-            return 'English';
-        case 'fr':
-            return 'French';
-        case 'es':
-            return 'Spanish';
-        case 'de':
-            return 'German';
-    }
-}
-
 let uid;
 
 function initApp() {
@@ -26,7 +13,7 @@ function initApp() {
   const transContainer = document.getElementById('translation-container')
   const signInMsg = document.getElementById('sign-in-msg');
   const clusterContainer = document.getElementById('cluster-container');
-  const clusterBtn = document.getElementById('cluster-btn'); 
+  const clusterBtn = document.getElementById('add-cluster-btn');
 
   firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
@@ -36,7 +23,7 @@ function initApp() {
       signInMsg.textContent = 'Logout'
       uid = firebase.auth().currentUser.uid;
       clusterContainer.style.display = "";
-      openClusters();
+      setClusters();
   } else {
       userEmail.textContent = '';
       transBtn.style.display = "none";
@@ -48,10 +35,10 @@ function initApp() {
   });
 
   transBtn.addEventListener('click', sendTranslation);
-  document.getElementById('add-cluster-btn').addEventListener('click', sendNewLink);
+  clusterBtn.addEventListener('click', sendNewLink);
 }
 
-function openClusters(){
+function setClusters(){
   chrome.storage.sync.get(["clusterchoices"], function(result) {
     if (chrome.runtime.error) {
       document.getElementById('choose-cluster').outerHTML = '<div style="color: red;">Error getting clusters</div>'
@@ -81,43 +68,6 @@ function sendNewLink(){
     };
     chrome.tabs.sendMessage(tabs[0].id, sendData);
   });
-}
-  
-/**
- * Start the auth flow and authorizes to Firebase.
- * @param {boolean} interactive True if the OAuth flow should request with an interactive mode.
- */
-function startAuth(interactive) {
-  chrome.identity.getAuthToken({interactive: !!interactive}, function(token) {
-    if (chrome.runtime.lastError && !interactive) {
-      console.log('It was not possible to get a token programmatically.');
-    } else if(chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
-    } else if (token) {
-      var credential = firebase.auth.GoogleAuthProvider.credential(null, token);
-      firebase.auth().signInWithCredential(credential).catch(function(error) {
-        if (error.code === 'auth/invalid-credential') {
-          chrome.identity.removeCachedAuthToken({token: token}, function() {
-            startAuth(interactive);
-          });
-        }
-      });
-    } else {
-      console.error('The OAuth Token was null');
-    }
-  });
-}
-
-/**
- * Starts the sign-in process.
- */
-function startSignIn() {
-  document.getElementById('quickstart-button').disabled = true;
-  if (firebase.auth().currentUser) {
-    firebase.auth().signOut();
-  } else {
-    startAuth(true);
-  }
 }
   
 window.onload = function() {

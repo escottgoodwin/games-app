@@ -5,7 +5,7 @@
     width: 375px;
     margin: 0;
     padding: 5px;
-    background-color: honeydew;
+    background-color: rgb(240, 246, 255);
   }
   a {
     text-decoration: none;
@@ -17,8 +17,8 @@
   }
   button {
     display:inline-block;
-    padding:0.3em;
-    margin:0 0.3em 0.3em 0;
+    padding:0.3em 0.6em 0.3em 0.6em;
+    margin:0.3em 0 0.3em 0;
     border-radius: 0.3em;
     box-sizing: border-box;
     text-decoration:none;
@@ -28,6 +28,8 @@
     background-color:#6415ff;
     text-align:center;
     transition: all 0.2s;
+    border: 0;
+    -webkit-appearance: none;
   }
   .mdl-grid {
     max-width: 1024px;

@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "Langa Learn",
-    "description": "This sample shows how to authorize Firebase in a Chrome extension using a Google account.",
-    "version": "2.1",
+    "description": "Allow intergration with the langalearn.com to translate words in webpages and add webpages to clusters.",
+    "version": "1.0",
     "icons": {
       "128": "langa-logo-128.png"
     },
@@ -25,7 +25,8 @@
     "permissions": [
       "identity",
       "tabs",
-      "storage"
+      "storage",
+      "contextMenus"
     ],
     "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
     "oauth2": {
@@ -36,5 +37,4 @@
       ]
     },
     "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw5QreL26a+IfdXMpMGyrGVO+qyU5uUa3cU5wT+//pzGbXSnm4dm26DXEFQlx8fJPffT1vz2IUezjzQr4yY+7IgNOhDYgf+j3K86yI/OR41Yj8TOqYRbF2f/cixD1o+HkCIphOYBdqd9SJEbgE4/ELV9QSiWKO/tLpffkc1szF8P/Ot2msFt2UHuLN5uNqn7zNz2/Dr0k0YGfjaR8IiVlkucKge5FW4+u89UWBCQ7cYlESLtYWNPBwZ21BDIOHJH2CAQAUKQUB8wLgA7EHcSV9cesh/F4FEV44W6CkzZyQyktfRct/ygM54VuoV57+O0VuyvIQ7tYKqi5si5NyZloQwIDAQAB"
-
   }
