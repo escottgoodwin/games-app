@@ -13,7 +13,6 @@ function initApp() {
   const transContainer = document.getElementById('translation-container')
   const signInMsg = document.getElementById('sign-in-msg');
   const clusterContainer = document.getElementById('cluster-container');
-  const clusterBtn = document.getElementById('add-cluster-btn');
 
   firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
@@ -35,7 +34,7 @@ function initApp() {
   });
 
   transBtn.addEventListener('click', sendTranslation);
-  clusterBtn.addEventListener('click', sendNewLink);
+  document.getElementById('add-cluster-btn').addEventListener('click', sendNewLink);
 }
 
 function setClusters(){

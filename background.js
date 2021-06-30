@@ -1,23 +1,24 @@
-const config = {
+const firebaseConfig = {
   apiKey: "AIzaSyDgi2AES0HjCr2Yp6QUQJzMRWHJJi1G3m8",
+  authDomain: "langolearn.firebaseapp.com",
   databaseURL: "https://langolearn.firebaseio.com",
+  projectId: "langolearn",
   storageBucket: "langolearn.appspot.com",
+  messagingSenderId: "479598553703",
+  appId: "1:479598553703:web:accbe4400543be3c7402c2",
+  measurementId: "G-0FPYD5P3FF"
 };
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 const functions = firebase.functions();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   if (request.type === 'add-link'){
-
-    addLinkLocal(request);
-    // addLinkLive(request)
+    addLinkLive(request)
   }
   
   if (request.type === 'translate'){
-    console.log(request);
-    translateLocal(request);
-    // translateLive(request)
+    translateLive(request)
   }
 
   if (request.type === "auth-token"){
@@ -33,96 +34,39 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 
   function setClusters(data){
-    const user = firebase.auth().currentUser;
-    if (user) {
-      const clusterchoices = data.clusterchoices;
-      chrome.storage.sync.set({ "clusterchoices" : clusterchoices }, function() {
-        if (chrome.runtime.error) {
-          console.log("Runtime error.");
-        }
-      });
-    }
-  }
-
-  function addLinkLocal(request){
-    const user = firebase.auth().currentUser;
-  
-    if (request.uid === user.uid){
-      const linkData = {
-        lang: request.cluster_lang, 
-        orig_lang: request.orig_lang, 
-        uid: request.uid, 
-        cluster_id: request.cluster_id,
-        url: request.url,
+    const clusterchoices = data.clusterchoices;
+    chrome.storage.sync.set({ "clusterchoices" : clusterchoices }, function() {
+      if (chrome.runtime.error) {
+        console.log("Runtime error.");
       }
-  
-      const addLinkurl = 'https://us-central1-langolearn.cloudfunctions.net/newUserLink2';
-  
-      fetch(addLinkurl, {
-        method: "post",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify(linkData),
-      })
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, {
-            "message": "link_added",
-            "success_msg": "Langa Learn link added!",
-          });
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, {"message": "error"});
-        }); 
-      });
-    } else {
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {"message": "error"});
-      }); 
-    }
+    });
   }
 
   function addLinkLive(request){
+    const linkData = {
+      lang: request.cluster_lang, 
+      orig_lang: request.orig_lang, 
+      uid: request.uid, 
+      cluster_id: request.cluster_id,
+      url: request.url,
+    }
 
-    const user = firebase.auth().currentUser;
-  
-    if (request.uid === user.uid){  
-  
-      const linkData = {
-        lang: request.cluster_lang, 
-        orig_lang: request.orig_lang, 
-        uid: request.uid, 
-        cluster_id: request.cluster_id,
-        url: request.url,
-      }
-  
-      var newUserLink1 = functions.httpsCallable('newUserLink1');
-      newUserLink1(linkData)
-      .then((data) => {
-        console.log(data);
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, {
-            "message": "link_added",
-            "success_msg": "Langa Learn link added!",
-          });
+    var newClusterLink = functions.httpsCallable('newClusterLink');
+    newClusterLink(linkData)
+    .then((response) => {
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+          "message": "link_added",
+          "success_msg": "Langa Learn link added!",
         });
-      })
-      .catch(function(error) {
-        console.log(error);
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, {"message": "error"});
-        }); 
       });
-    } else {
+    })
+    .catch(function(error) {
+      console.log(error);
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {"message": "error"});
       }); 
-    }
+    });
   }
 
   function translateLive(request){
@@ -141,15 +85,16 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         "art_id": "none",
       };
   
-      var translateTextCR = functions.httpsCallable('translateTextCR');
+      var translateTextCR = functions.httpsCallable('translateTextExtOC');
         translateTextCR(data)
-        .then((data) => {
+        .then((response) => {
           chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            chrome.tabs.sendMessage(tabs[0].id, {
+            const transResponse = {
               "message": "replace", 
               "find": word, 
-              "replace": data["trans_text"],
-            });
+              "replace": response.data["trans_text"],
+            }
+            chrome.tabs.sendMessage(tabs[0].id, transResponse);
           });
         })
         .catch(function(error) {
@@ -158,52 +103,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             chrome.tabs.sendMessage(tabs[0].id, {"message": "error"});
           }); 
         });
-    } else {
-      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, {"message": "error"});
-      }); 
-    }
-  }
-
-  function translateLocal(request){
-    const user = firebase.auth().currentUser;
-    const uid = user.uid;
-    let orig_lang = request.orig_lang;
-    let word = request.word;
-    if (uid){  
-  
-      const langaurl = `https://us-central1-langolearn.cloudfunctions.net/translateTextExt`;
-  
-      const data = {
-        "orig_lang": orig_lang, 
-        "orig_text": word, 
-        "uid": uid, 
-        "art_id": "none",
-      };
-  
-      fetch(langaurl, {
-        method: "post",
-        headers: {"content-type": "application/json"},
-        body: JSON.stringify(data),
-      })
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(data) {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, {
-            "message": "replace", 
-            "find": word, 
-            "replace": data["trans_text"],
-          });
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, {"message": "error"});
-        }); 
-      });
     } else {
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {"message": "error"});
@@ -231,7 +130,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       });
     }
   }
-
 });
 
 chrome.browserAction.onClicked.addListener(function (t) {
@@ -244,13 +142,11 @@ chrome.contextMenus.create({
   "onclick" : function(e) {
     if (e) {
       chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        console.log(tabs[0].id);
         chrome.tabs.sendMessage(tabs[0].id, {
           "message": "translate-menu", 
           "transWord": e.selectionText,
         });
       });
-
     }
   }
 });

@@ -1,41 +1,26 @@
-// some global variables
 let find = "";
 let replace = "";
 
-// listen for any "messages"
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   
   if (request.message === "translate") {
-
     const word = window.getSelection().toString();
     translateSelection(request, word);
-
   } else if (request.message === "translate-menu") {
     const word = request.transWord
     translateSelection(request, word);
-
   } else if (request.message === "replace") {
-      // get the "find" (actual word) and "replace" (translatedText)
       find = request.find;
       replace = request.replace;
-      // replaceText function to replace all instances of "find" word with the "replace" word
       replaceText(document.body,);
-
   } else if (request.message === "error") {
-
     alert('Langa Learn Error!');
     console.log(request.error);
-
   } else if (request.message === "new-link") {
-
     addLink(request)
-
   } else if (request.message === "link_added") {
-
     alert(request.success_msg);
-
   } else if (request.message === "auth-token") {
-
     chrome.runtime.sendMessage({
       "type": "auth-token", 
       "token": request.token,
@@ -43,7 +28,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   } else {
     console.log('no route');
   }
-
 });
 
   window.addEventListener("message", function(event) {
@@ -122,15 +106,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     });
   }
   
-  // replaceText function definition
   function replaceText(element) {
     if (element.hasChildNodes()) {
-      // if our root element has childNodes, then for each childNode, repeat this function
       element.childNodes.forEach(replaceText);
     } else {
-      // make a regular expression
       const re = new RegExp(find, "gi");
-      // then replace the word
       const translation = `${find} (${replace}) `
       element.textContent = element.textContent.replace(re, translation);
     }
